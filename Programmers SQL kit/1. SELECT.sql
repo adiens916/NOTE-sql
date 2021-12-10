@@ -1,0 +1,67 @@
+-- Oracle은 항상 ORDER BY가 있어야 하는 듯?
+
+
+-- 1. 모든 레코드 조회하기
+SELECT *
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID;
+
+-- 2. 역순 정렬하기
+SELECT NAME, DATETIME
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID DESC;
+
+-- 3. 아픈 동물 찾기
+SELECT ANIMAL_ID, NAME
+FROM ANIMAL_INS
+WHERE INTAKE_CONDITION = 'Sick'
+ORDER BY ANIMAL_ID;
+
+-- 4. 어린 동물 찾기
+SELECT ANIMAL_ID, NAME
+FROM ANIMAL_INS
+WHERE INTAKE_CONDITION != 'Aged'
+ORDER BY ANIMAL_ID;
+
+-- 5. 동물의 아이디와 이름
+SELECT ANIMAL_ID, NAME
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID;
+
+-- 6. 여러 기준으로 정렬하기
+SELECT ANIMAL_ID, NAME, DATETIME
+FROM ANIMAL_INS
+ORDER BY NAME, DATETIME DESC;
+
+-- 7. 상위 N개 레코드
+-- MY-SQL은 LIMIT, ORACLE은 서브쿼리
+-- https://chanhuiseok.github.io/posts/db-3/
+SELECT NAME
+FROM ANIMAL_INS
+ORDER BY DATETIME
+LIMIT 1;
+
+SELECT NAME
+FROM (
+    SELECT * 
+    FROM ANIMAL_INS 
+    ORDER BY DATETIME
+)
+WHERE ROWNUM = 1;
+
+-- 서브쿼리에서 날짜 최솟값 구하기: MIN
+-- https://programmers.co.kr/questions/15982
+-- MIN이 LIMIT보다 더 빠름
+-- https://stackoverflow.com/questions/426731/min-max-vs-order-by-and-limit
+SELECT NAME
+FROM ANIMAL_INS
+WHERE DATETIME = (
+  SELECT MIN(DATETIME)
+  FROM ANIMAL_INS
+);
+
+-- 서브쿼리 없는 정답: FETCH
+-- https://programmers.co.kr/questions/22616
+SELECT NAME FROM ANIMAL_INS
+ORDER BY DATETIME
+FETCH FIRST 1 ROW ONLY;
