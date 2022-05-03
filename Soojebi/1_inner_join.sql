@@ -1,0 +1,4 @@
+-- 내부 조인
+SELECT A.NO, NAME, PRICE 
+  FROM BOOK A JOIN BOOKPRICE B
+    ON A.NO = B.NO;
